@@ -6,6 +6,8 @@
 #include "draw.h"
 #include "matrix.h"
 
+// REMEMBER: WE ARE DEALING WITH EDGE MATRICES AS PARAMETERS
+
 /*======== void add_point() ==========
 Inputs:   struct matrix * points
          int x
@@ -16,6 +18,13 @@ adds point (x, y, z) to points and increment points.lastcol
 if points is full, should call grow on points
 ====================*/
 void add_point( struct matrix * points, int x, int y, int z) {
+  if (points->lastcol == points->cols)
+    grow_matrix(points,points->cols * 2);
+  points->m[0][points->lastcol]=x;
+  points->m[1][points->lastcol]=y;
+  points->m[2][points->lastcol]=z;
+  points->m[3][points->lastcol]=1;
+  points->lastcol = points->lastcol + 1;
 }
 
 /*======== void add_edge() ==========
@@ -28,6 +37,8 @@ should use add_point
 void add_edge( struct matrix * points, 
 	       int x0, int y0, int z0, 
 	       int x1, int y1, int z1) {
+  add_point(points,x0,y0,z0);
+  add_point(points,x1,y1,z1);
 }
 
 /*======== void draw_lines() ==========
@@ -39,13 +50,15 @@ Go through points 2 at a time and call draw_line to add that line
 to the screen
 ====================*/
 void draw_lines( struct matrix * points, screen s, color c) {
+  int col=0;
+  for ( ; col < points->cols-1; col++)
+    draw_line(points->m[0][col],points->m[1][col],points->m[0][col+1],points->m[1][col+1],s,c);
 }
 
 
 void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
  
   int x, y, d, dx, dy;
-
   x = x0;
   y = y0;
   
@@ -63,87 +76,77 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
 
   //positive slope: Octants 1, 2 (5 and 6)
   if ( dy > 0 ) {
-
     //slope < 1: Octant 1 (5)
     if ( dx > dy ) {
       d = dy - ( dx / 2 );
   
       while ( x <= x1 ) {
-	plot(s, c, x, y);
+      	plot(s, c, x, y);
 
-	if ( d < 0 ) {
-	  x = x + 1;
-	  d = d + dy;
-	}
-	else {
-	  x = x + 1;
-	  y = y + 1;
-	  d = d + dy - dx;
-	}
+      	if ( d < 0 ) {
+      	  x = x + 1;
+      	  d = d + dy;
+      	}
+      	else {
+      	  x = x + 1;
+      	  y = y + 1;
+      	  d = d + dy - dx;
+      	}
       }
     }
-
     //slope > 1: Octant 2 (6)
     else {
       d = ( dy / 2 ) - dx;
       while ( y <= y1 ) {
-
-	plot(s, c, x, y );
-	if ( d > 0 ) {
-	  y = y + 1;
-	  d = d - dx;
-	}
-	else {
-	  y = y + 1;
-	  x = x + 1;
-	  d = d + dy - dx;
-	}
+      	plot(s, c, x, y );
+      	if ( d > 0 ) {
+      	  y = y + 1;
+      	  d = d - dx;
+      	}
+      	else {
+      	  y = y + 1;
+      	  x = x + 1;
+      	  d = d + dy - dx;
+      	}
       }
     }
-  }
+  }//end of pos slope: octants 1,2 (5 and 6)
 
   //negative slope: Octants 7, 8 (3 and 4)
   else { 
 
     //slope > -1: Octant 8 (4)
     if ( dx > abs(dy) ) {
-
       d = dy + ( dx / 2 );
-  
       while ( x <= x1 ) {
-
-	plot(s, c, x, y);
-
-	if ( d > 0 ) {
-	  x = x + 1;
-	  d = d + dy;
-	}
-	else {
-	  x = x + 1;
-	  y = y - 1;
-	  d = d + dy + dx;
-	}
+      	plot(s, c, x, y);
+      	if ( d > 0 ) {
+      	  x = x + 1;
+      	  d = d + dy;
+      	}
+      	else {
+      	  x = x + 1;
+      	  y = y - 1;
+      	  d = d + dy + dx;
+      	}
       }
     }
 
     //slope < -1: Octant 7 (3)
     else {
-
       d =  (dy / 2) + dx;
-
       while ( y >= y1 ) {
-	
-	plot(s, c, x, y );
-	if ( d < 0 ) {
-	  y = y - 1;
-	  d = d + dx;
-	}
-	else {
-	  y = y - 1;
-	  x = x + 1;
-	  d = d + dy + dx;
-	}
+      	plot(s, c, x, y );
+      	if ( d < 0 ) {
+      	  y = y - 1;
+      	  d = d + dx;
+      	}
+      	else {
+      	  y = y - 1;
+      	  x = x + 1;
+      	  d = d + dy + dx;
+      	}
       }
     }
-  }
+  } //end of neg slopes: octants 7, 8 (3 and 4)
 }
