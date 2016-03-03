@@ -83,7 +83,7 @@ void print_matrix(struct matrix *m) {
   printf("\n");
   for (; row < m->rows; row++){
     for (; col< m->cols; col++){
-      printf("%f\n", m->m[r][c]);
+      printf("%f\n", m->m[row][col]);
     }
     printf("\n");
   }
@@ -97,6 +97,17 @@ Returns:
 turns m in to an identity matrix
 */
 void ident(struct matrix *m) {
+  int row=0;
+  int col=0;
+
+  for (; row < m->rows; row++){
+    for (; col< m->cols; col++){
+      if (row==col) //if on the diagonal of the square matrix
+        m->m[row][col] = 1;
+      else
+        m->m[row][col]=0;
+    }
+  }
 }
 
 
