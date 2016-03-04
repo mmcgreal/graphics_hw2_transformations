@@ -4,6 +4,8 @@
 
 #include "matrix.h"
 
+#define PI 3.14159265
+
 /*-------------- struct matrix *new_matrix() --------------
 Inputs:  int rows
          int cols 
@@ -61,7 +63,6 @@ Reallocates the memory for m->m such that it now has
 newcols number of collumns
 ====================*/
 void grow_matrix(struct matrix *m, int newcols) {
-  
   int i;
   for (i=0;i<m->rows;i++) {
       m->m[i] = realloc(m->m[i],newcols*sizeof(double));
@@ -119,6 +120,14 @@ Returns:
 multiply each element of m by x
 */
 void scalar_mult(double x, struct matrix *m) {
+  int row=0;
+  int col=0;
+
+  for (; row < m->rows; row++){
+    for (; col< m->cols; col++){
+      m->m[row][col]*=x;
+    }
+  }
 }
 
 
@@ -130,9 +139,27 @@ Returns:
 a*b -> b
 */
 void matrix_mult(struct matrix *a, struct matrix *b) {
+  int row=0;
+  int col=0;
+  int temp=0;
+  int curr=0; //current col of a & row of b
+  struct matrix *sums;
+  sums =  new_matrix (a->rows, b->cols);
+
+  for (; row < sums->rows; row++){
+    for (; col< sums->cols; col++){
+      curr=0;
+      //set temp
+      temp=0;
+      while (curr< a->cols){
+        temp= (a->m[row][curr]) * (b->m[curr][col]);
+        curr++;
+      }
+      sums->m[row][col] = temp;
+    }
+  }
+  copy_matrix(sums, b);
 }
-
-
 
 /*-------------- void copy_matrix() --------------
 Inputs:  struct matrix *a
@@ -142,7 +169,6 @@ Returns:
 copy matrix a to matrix b
 */
 void copy_matrix(struct matrix *a, struct matrix *b) {
-
   int r, c;
 
   for (r=0; r < a->rows; r++) 
@@ -158,6 +184,14 @@ Returns: The translation matrix created using x, y and z
 as the translation offsets.
 ====================*/
 struct matrix * make_translate(double x, double y, double z) {
+  struct matrix * translated;
+  translated=new_matrix(4,4);
+  ident(translated); //bc fills translated w zeroes in the right places
+  //also sets translated->m[3][3] to 1
+  translated->m[0][3]=x;
+  translated->m[1][3]=y;
+  translated->m[2][3]=z;
+  return translated;
 }
 
 /*======== struct matrix * make_scale() ==========
@@ -168,7 +202,23 @@ Returns: The translation matrix creates using x, y and z
 as the scale factors
 ====================*/
 struct matrix * make_scale(double x, double y, double z) {
+  struct matrix * scaled;
+  scaled=new_matrix(4,4);
+  ident(scaled); //bc fills scaled w zeroes in the right places
+  //also sets scaled->m[3][3] to 1
+  scaled->m[0][0]=x;
+  scaled->m[1][1]=y;
+  scaled->m[2][2]=z;
+  return scaled;
 }
+
+
+/*
+Note: The trig functions in java, python and c 
+take radians as parameters, but you should assume 
+degree input, make sure to convert or things won't look right.
+*/
+
 
 /*======== struct matrix * make_rotX() ==========
 Inputs:  double theta
@@ -177,6 +227,16 @@ Returns: The rotation matrix created using theta as the
 angle of rotation and X as the axis of rotation.
 ====================*/
 struct matrix * make_rotX(double theta) {
+  make_radian(theta);
+  int row=0;
+  int col=0;
+
+  for (; row < m->rows; row++){
+    for (; col< m->cols; col++){
+      
+    }
+  }
+
 }
 
 /*======== struct matrix * make_rotY() ==========
@@ -186,6 +246,15 @@ Returns: The rotation matrix created using theta as the
 angle of rotation and Y as the axis of rotation.
 ====================*/
 struct matrix * make_rotY(double theta) {
+  make_radian(theta);
+  int row=0;
+  int col=0;
+
+  for (; row < m->rows; row++){
+    for (; col< m->cols; col++){
+      
+    }
+  }
 }
 
 /*======== struct matrix * make_rotZ() ==========
@@ -195,4 +264,37 @@ Returns: The rotation matrix created using theta as the
 angle of rotation and Z as the axis of rotation.
 ====================*/
 struct matrix * make_rotZ(double theta) {
+  make_radian(theta);
+  int row=0;
+  int col=0;
+
+  for (; row < m->rows; row++){
+    for (; col< m->cols; col++){
+      
+    }
+  }
 }
+
+
+
+//convert degree input to radians
+double make_radian (double theta){
+  theta *= PI / 180;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
