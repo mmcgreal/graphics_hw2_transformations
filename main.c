@@ -6,7 +6,6 @@
 #include "display.h"
 #include "draw.h"
 #include "matrix.h"
-#include "parser.h"
 
 int main() {
 
@@ -20,4 +19,7 @@ int main() {
   
   free_matrix( transform );
   free_matrix( edges );
+
+  display(s);
+  save_extension(s, "lines.png");
 }  

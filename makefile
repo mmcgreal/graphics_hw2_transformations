@@ -1,4 +1,4 @@
-OBJECTS= main.o draw.o display.o matrix.o parser.o
+OBJECTS= main.o draw.o display.o matrix.o
 CFLAGS= -Wall
 LDFLAGS= -lm
 CC= gcc
