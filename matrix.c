@@ -88,7 +88,7 @@ void print_matrix(struct matrix *m) {
     }
     printf("\n");
   }
-  printf("\n");
+
 }
 
 /*-------------- void ident() --------------
@@ -279,7 +279,5 @@ struct matrix * make_rotZ(double theta) {
 
   return rotated;
 }
-
-
 
 
