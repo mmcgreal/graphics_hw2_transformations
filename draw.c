@@ -6,8 +6,6 @@
 #include "draw.h"
 #include "matrix.h"
 
-// REMEMBER: WE ARE DEALING WITH EDGE MATRICES AS PARAMETERS
-
 /*======== void add_point() ==========
 Inputs:   struct matrix * points
          int x
@@ -18,6 +16,7 @@ adds point (x, y, z) to points and increment points.lastcol
 if points is full, should call grow on points
 ====================*/
 void add_point( struct matrix * points, int x, int y, int z) {
+  
   if (points->lastcol == points->cols)
     grow_matrix(points,points->cols *2);
   points->m[0][points->lastcol]=x;
@@ -50,6 +49,7 @@ Go through points 2 at a time and call draw_line to add that line
 to the screen
 ====================*/
 void draw_lines( struct matrix * points, screen s, color c) {
+  
   int col=0;
   for ( ; col < points->cols-1; col++)
     draw_line(points->m[0][col],points->m[1][col],points->m[0][col+1],points->m[1][col+1],s,c);

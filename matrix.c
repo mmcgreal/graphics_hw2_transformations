@@ -98,15 +98,16 @@ Returns:
 turns m in to an identity matrix
 */
 void ident(struct matrix *m) {
-  int row=0;
-  int col=0;
-
-  for (; row < m->rows; row++){
-    for (; col< m->cols; col++){
-      if (row==col) //if on the diagonal of the square matrix
+  int row;
+  int col;
+  for (row=0 ; row < 4; row ++){
+    for (col=0 ; col < 4; col ++){
+      if (col == row){
         m->m[row][col] = 1;
-      else
-        m->m[row][col]=0;
+      }
+      else{
+        m->m[row][col] = 0;
+      }
     }
   }
 }
@@ -139,25 +140,18 @@ Returns:
 a*b -> b
 */
 void matrix_mult(struct matrix *a, struct matrix *b) {
-  int row=0;
-  int col=0;
-  int temp=0;
-  int curr=0; //current col of a & row of b
-  struct matrix *sums;
-  sums =  new_matrix (a->rows, b->cols);
 
-  for (; row < sums->rows; row++){
-    for (; col< sums->cols; col++){
-      curr=0;
-      //set temp
-      temp=0;
-      while (curr< a->cols){
-        temp= (a->m[row][curr]) * (b->m[curr][col]);
-        curr++;
-      }
-      sums->m[row][col] = temp;
+ struct matrix *sums;
+  sums = new_matrix(4, b->lastcol);
+
+  int r, c;
+  for (r = 0; r < 4; r ++){
+    for (c = 0; c < b->lastcol; c ++){
+      sums->m[r][c] = a->m[r][0] * b->m[0][c] + a->m[r][1] * b->m[1][c] + a->m[r][2] * b->m[2][c] + a->m[r][3] * b->m[3][c];
+      
     }
   }
+
   copy_matrix(sums, b);
 }
 
